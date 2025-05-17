@@ -23,10 +23,11 @@ public class JwtService {
 
   public String generateToken(User user) {
     SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    long expirationInMs = jwtExpirationSecs * 1000L;
     return Jwts.builder()
         .subject(user.getName())
         .issuedAt(new Date())
-        .expiration(new Date((new Date()).getTime() + jwtExpirationSecs))
+        .expiration(new Date(System.currentTimeMillis() + expirationInMs))
 //        .signWith(SignatureAlgorithm.HS256, jwtSecret)
         .signWith(key, (SecureDigestAlgorithm) Jwts.SIG.get().forKey(SignatureAlgorithm.HS256.getValue()))
         .compact();
