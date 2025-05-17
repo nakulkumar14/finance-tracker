@@ -36,7 +36,13 @@ public class CategoryService {
   public void deleteCategory(Long id) {
     Optional<Category> categoryOptional = getCategory(id);
     if (categoryOptional.isPresent()) {
+      // default categories cannot be deleted
       Category category = categoryOptional.get();
+      if (category.getUser() == null) {
+        throw new IllegalStateException("Default categories cannot be deleted.");
+      }
+
+      // No transaction should be present for category before deletion
       String name = category.getName();
       boolean exists = transactionService.existsByCategory(name);
       if (!exists) {
