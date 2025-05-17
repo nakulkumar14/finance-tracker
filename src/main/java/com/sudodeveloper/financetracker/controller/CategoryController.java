@@ -23,9 +23,9 @@ public class CategoryController {
     return ResponseEntity.ok(categoryService.saveCategory(category));
   }
 
-  @GetMapping("/{userId}")
+  @GetMapping("/user/{userId}")
   public ResponseEntity<List<Category>> getCategories(@PathVariable Long userId) {
-    return ResponseEntity.ok(categoryService.getUserCategories(userId));
+    return ResponseEntity.ok(categoryService. getUserCategoriesIncludingGlobal(userId));
   }
 
   @GetMapping("/{id}")

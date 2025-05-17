@@ -29,6 +29,10 @@ public class CategoryService {
     return categoryRepository.findById(id);
   }
 
+  public List<Category> getUserCategoriesIncludingGlobal(Long userId) {
+    return categoryRepository.findByUserIdOrUserIsNull(userId);
+  }
+
   public void deleteCategory(Long id) {
     Optional<Category> categoryOptional = getCategory(id);
     if (categoryOptional.isPresent()) {
