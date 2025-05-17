@@ -93,4 +93,8 @@ public class TransactionService {
     }
     throw new FinanceTrackerException("Transaction not found");
   }
+
+  public boolean existsByCategory(String category) {
+    return transactionRepository.existsByCategory(category);
+  }
 }
