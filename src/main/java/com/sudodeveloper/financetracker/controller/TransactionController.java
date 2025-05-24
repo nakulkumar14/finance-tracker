@@ -1,10 +1,12 @@
 package com.sudodeveloper.financetracker.controller;
 
 import com.sudodeveloper.financetracker.dto.TransactionDTO;
+import com.sudodeveloper.financetracker.model.CustomUserDetails;
 import com.sudodeveloper.financetracker.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,8 @@ public class TransactionController {
   private TransactionService transactionService;
 
   @GetMapping
-  public ResponseEntity<List<TransactionDTO>> getTransactions() {
-    return ResponseEntity.ok(transactionService.getUserTransactions());
+  public ResponseEntity<List<TransactionDTO>> getTransactions(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    return ResponseEntity.ok(transactionService.getUserTransactions(userDetails.getUsername()));
   }
 
   @GetMapping("/{id}")
@@ -29,8 +31,8 @@ public class TransactionController {
   }
 
   @PostMapping
-  public ResponseEntity<TransactionDTO> addTransaction(@Valid @RequestBody TransactionDTO transactionDTO) {
-    return ResponseEntity.ok(transactionService.addTransaction(transactionDTO));
+  public ResponseEntity<TransactionDTO> addTransaction(@Valid @RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    return ResponseEntity.ok(transactionService.addTransaction(transactionDTO, userDetails.getUsername()));
   }
 
   @DeleteMapping("/{id}")

@@ -2,6 +2,7 @@ package com.sudodeveloper.financetracker.service;
 
 import com.sudodeveloper.financetracker.dto.TransactionDTO;
 import com.sudodeveloper.financetracker.entity.Transaction;
+import com.sudodeveloper.financetracker.entity.User;
 import com.sudodeveloper.financetracker.exceptions.FinanceTrackerException;
 import com.sudodeveloper.financetracker.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,12 @@ public class TransactionService {
   @Autowired
   private TransactionRepository transactionRepository;
 
-  public List<TransactionDTO> getUserTransactions() {
-    List<Transaction> transactions = transactionRepository.findByUserId(1l);
+  @Autowired
+  private UserService userService;
+
+  public List<TransactionDTO> getUserTransactions(String username) {
+    long userId = userService.getUserId(username);
+    List<Transaction> transactions = transactionRepository.findByUserId(userId);
     List<TransactionDTO> transactionDTOS = new ArrayList<>();
     for (Transaction transaction : transactions) {
       transactionDTOS.add(getTransactionDTO(transaction));
@@ -53,8 +58,10 @@ public class TransactionService {
     transactionRepository.deleteById(id);
   }
 
-  public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
+  public TransactionDTO addTransaction(TransactionDTO transactionDTO, String username) {
+    User user = userService.fetchUser(username);
     Transaction transaction = getTransaction(transactionDTO);
+    transaction.setUser(user);
     Transaction saved = transactionRepository.save(transaction);
     return getTransactionDTO(saved);
   }

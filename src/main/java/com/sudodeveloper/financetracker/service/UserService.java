@@ -74,4 +74,20 @@ public class UserService {
       throw new FinanceTrackerException("User not found");
     }
   }
+
+  public long getUserId(String username) {
+    Optional<User> userOptional = userRepository.findByName(username);
+    if (userOptional.isPresent()) {
+      return userOptional.get().getId();
+    }
+    throw new FinanceTrackerException("User not found");
+  }
+
+  public User fetchUser(String username) {
+    Optional<User> userOptional = userRepository.findByName(username);
+    if (userOptional.isPresent()) {
+      return userOptional.get();
+    }
+    throw new FinanceTrackerException("User not found");
+  }
 }
